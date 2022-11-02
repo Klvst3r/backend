@@ -1,0 +1,55 @@
+2. Routes
+
+Terminal
+
+php artisan route:list
+
+/routes/api.php
+
+php artisan make:model Book -mf --api 
+
+	-m Parametro para crear la migración al modelo
+	-f Para la creación de un factory
+	--api Para generar un controlador con lo metodos necesarios
+
+Archivos generados
+
+   INFO  Model [app/Models/Book.php] created successfully.
+   [Modelo para interactuar con la BD orientada a objetos]  
+
+   INFO  Factory [database/factories/BookFactory.php] created successfully.  
+   [Se crean datos de ejemplo en la BD]
+
+   INFO  Created migration [2022_11_02_040718_create_books_table].  
+   [Creación de la estructura de la tabla de los libros]
+
+   INFO  Controller [app/Http/Controllers/BookController.php] created successfully.  
+   [Controlador]
+
+
+Definicion de las rutas
+
+REST API
+
+Verbo HTTP 		Path 				Nombre
+GET				/books 				index
+GET 			/books/{id}			show
+-------------------------------------------
+GET				/books/create 		create [Sin utilizar]
+-------------------------------------------
+POST 			/books 				store
+-------------------------------------------
+GET				/books/{id}/edit	edit	[Sin utilizar]
+-------------------------------------------
+PATCH			/books/{id}			update
+DELETE 			/books/{id}			delete
+
+
+
+api.php
+[Creado con el comando make:module]
+Route::apiResource('books', BookController::class);
+
+books - Nombre del recurso
+BookController::class	- controlador que procesara las rutas
+
