@@ -53,3 +53,35 @@ Route::apiResource('books', BookController::class);
 books - Nombre del recurso
 BookController::class	- controlador que procesara las rutas
 
+
+php artisan route:list
+
+
+GET|HEAD        / ........................................................................................................ 
+  POST            _ignition/execute-solution . ignition.executeSolution › Spatie\LaravelIgnition › ExecuteSolutionController
+  GET|HEAD        _ignition/health-check ............. ignition.healthCheck › Spatie\LaravelIgnition › HealthCheckController
+  POST            _ignition/update-config .......... ignition.updateConfig › Spatie\LaravelIgnition › UpdateConfigController
+---[Rutas generadas]  
+  GET|HEAD        api/books ............................................................. books.index › BookController@index
+  POST            api/books ............................................................. books.store › BookController@store
+  GET|HEAD        api/books/{book} ........................................................ books.show › BookController@show
+  PUT|PATCH       api/books/{book} .................................................... books.update › BookController@update
+  DELETE          api/books/{book} .................................................. books.destroy › BookController@destroy
+---
+  GET|HEAD        sanctum/csrf-cookie .................... sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
+
+
+Rutas
+
+books.index [Para obtener todos los libros]
+books.store [Para almacenar un libro]
+books.show [Para mostrar un libro]
+books.update [Para actualizar un libro]
+books.destroy [Para destruir un libro]
+
+En la parte delante de las rutas esta el metodo del controlador se esta apuntando, es decir esta ruta esta apuntando al metodo index | store | show | update | destroy dentro del Controlador BooksController
+
+
+---
+app/Http/Controllers/BooksController.php
+
