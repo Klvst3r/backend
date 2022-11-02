@@ -11,15 +11,17 @@ class BooksApiTest extends TestCase
 {
     use RefreshDatabase;
 
+    /** @test */
+
     function can_get_all_books()
     {
 
-        $books = Book::factory(4)->create();
+        $book = Book::factory()->create();
 
-        //dd($book);
-        //dd($books->count());
+        dd($book);
+        
         
 
-        $this->get('/api/books')->dump();
+        
     }
 }
