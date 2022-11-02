@@ -16,9 +16,15 @@ class BooksApiTest extends TestCase
     function can_get_all_books()
     {
 
-        $book = Book::factory()->create();
+        /*$book = Book::factory()->create();
 
-        dd($book);
+        dd($book);*/
+
+        //Multiples libros
+        
+        $books = Book::factory(4)->create();
+
+        dd($books->count()); //Se cuentan los libros
         
         
 

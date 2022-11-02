@@ -181,7 +181,7 @@ En:
 
             $book = Book::factory()->create();
 
-            dd($book); //dom by die
+            dd($book); //dom by die o dye dom para inspeccionar este libro
             
             
 
@@ -296,3 +296,33 @@ users;
 
 
 
+
+
+Al ejecutar las pruebas tambien se pueden ejecutar multiples libros en la base de datos pasando un numero.
+
+Suponiendo que se quieren cuatro libros:
+
+---
+   $books = Book::factory(4)->create();
+
+        dd($books->count()); //Se cuentan los libros
+        
+---
+
+Se ejecuta la prueba:
+
+php artisan test
+
+Para verificar que son cuatro
+
+php artisan test
+ 4 // tests/Feature/BooksApiTest.php:27
+ 
+Una vez que se tienen los libros en la base de datos se hara una peticion de tipo GET
+
+---
+   $books = Book::factory(4)->create();
+
+   $this->get('/api/books')->dump() //Dump para inspeccionar la respuesta
+        
+---
