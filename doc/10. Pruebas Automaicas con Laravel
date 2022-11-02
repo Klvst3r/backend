@@ -362,3 +362,33 @@ php artisan test
 
 Lo que se obtiene es un JSON con los cuatro libros que se generaron con factory.
 
+ AL URL puede cambiar a futuro por lo que ahora vamos  a utilizar un nombre de ruta:
+
+ Utilizando un nombre de ruta
+
+BooksApiTest.php
+ ---
+
+       $books = Book::factory(4)->create();
+        
+        dd(route('books.index'));
+
+        $this->get(route('books.index'))->dump();
+
+ ---
+
+ Ahora ejecutamos la prueba en consola
+
+ php artisan test
+
+La URL obtenida en la prueba es:
+
+php artisan test
+ "http://localhost/api/books" // tests/Feature/BooksApiTest.php:31
+
+ Esta es la URL a la que se va a visitar.
+
+ Ahora podemos hacer una peticion de tipo GET haciendo una peticin a la ruta devolviendo con el dump()
+
+
+ 

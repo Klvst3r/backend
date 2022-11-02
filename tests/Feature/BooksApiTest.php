@@ -26,8 +26,11 @@ class BooksApiTest extends TestCase
 
         //dd($books->count()); //Se cuentan los libros
         
-        $this->get('/api/books')->dump();
+        //$this->get('/api/books')->dump();
         
+        dd(route('books.index'));
+
+        $this->get(route('books.index'))->dump();
 
         
     }
