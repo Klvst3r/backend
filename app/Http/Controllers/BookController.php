@@ -17,7 +17,11 @@ class BookController extends Controller
         //return ['Klvst3r'];
         /*Devolver todos los libros de la BD*/
         
+        //En lugar del metodo all() utilizar paginate()
         return Book::all();
+       
+        //Paginar los recursos 
+        //return Book::paginate();
     }
 
     /**

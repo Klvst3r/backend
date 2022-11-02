@@ -1,0 +1,67 @@
+5. Paginacion
+
+Casi nunca se utiliza l vista 
+
+ public function index()
+    {
+        
+        return Book::all();
+    }
+
+Por que al tener muchos datos con informacion de los libros, esto disminuiria el desempeño de la API, por lo que se recomienda utilizar es paginate ()
+
+
+
+
+Resultando de la vista:
+
+---
+{
+"current_page": 1,
+"data": [
+{
+"id": 1,
+"title": "Book 1",
+"created_at": "2022-11-01T20:19:04.000000Z",
+"updated_at": "2022-11-01T20:19:04.000000Z"
+},
+{
+"id": 2,
+"title": "Book 2",
+"created_at": "2022-11-01T20:19:04.000000Z",
+"updated_at": "2022-11-01T20:19:04.000000Z"
+}
+],
+"first_page_url": "http://127.0.0.1:8000/api/books?page=1",
+"from": 1,
+"last_page": 1,
+"last_page_url": "http://127.0.0.1:8000/api/books?page=1",
+"links": [
+{
+"url": null,
+"label": "&laquo; Previous",
+"active": false
+},
+{
+"url": "http://127.0.0.1:8000/api/books?page=1",
+"label": "1",
+"active": true
+},
+{
+"url": null,
+"label": "Next &raquo;",
+"active": false
+}
+],
+"next_page_url": null,
+"path": "http://127.0.0.1:8000/api/books",
+"per_page": 15,
+"prev_page_url": null,
+"to": 2,
+"total": 2
+}
+---
+
+
+Aunque para empezar y mantener la coherencia y entendimiento se queda el metodo all()
+

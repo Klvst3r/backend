@@ -157,3 +157,16 @@ http://127.0.0.1:8000/api/books/2
 
 Ya tenemos las dos rutas Index y show
 
+
+Casi nunca se utiliza l vista 
+
+ public function index()
+    {
+        
+        return Book::all();
+    }
+
+Por que al tener muchos datos con informacion de los libros, esto disminuiria el desempeño de la API, por lo que se recomienda utilizar es paginate ()
+
+
+
