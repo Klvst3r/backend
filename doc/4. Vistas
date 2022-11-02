@@ -1,0 +1,107 @@
+4. Vistas
+
+
+Index
+=====
+
+http://127.0.0.1:8000/api/books
+
+Se tiene un array vacio y sin error en el acceso de la BD y a la estructura de la tabla books
+
+Esta vacio por que no se tienen ningun libro en la BD
+
+Se crea un registro inicial
+
+
+INSERT INTO `books` (`id`, `title`, `created_at`, `updated_at`) VALUES (NULL, 'Book 1', '2022-11-01 20:19:04', '2022-11-01 20:19:04');
+
+
+Si regresamos al navegador y actualizamos:
+
+ [{"id":1,"title":"Book 1","created_at":"2022-11-01T20:19:04.000000Z","updated_at":"2022-11-01T20:19:04.000000Z"}]
+
+
+ 0	
+id	1
+title	"Book 1"
+created_at	"2022-11-01T20:19:04.000000Z"
+updated_at	"2022-11-01T20:19:04.000000Z"
+
+Para visualizar mejor el texto formateado en JASON aplicamos con el plugin
+
+https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa/related?hl=es
+
+El resulytado sera:
+
+[
+{
+"id": 1,
+"title": "Book 1",
+"created_at": "2022-11-01T20:19:04.000000Z",
+"updated_at": "2022-11-01T20:19:04.000000Z"
+}
+]
+
+
+
+Vista Show
+==========
+
+
+Desde BookController
+
+ public function show(Book $book)
+    {
+        
+    }
+
+
+Podemos ver que se esta inyectando el modelo Book con un libro
+
+public function show(Book $book)
+    {
+        return $book;
+    }
+
+En el navegador
+
+
+http://127.0.0.1:8000/api/books/1
+---
+
+	{
+	"id": 1,
+	"title": "Book 1",
+	"created_at": "2022-11-01T20:19:04.000000Z",
+	"updated_at": "2022-11-01T20:19:04.000000Z"
+	}
+---
+
+Se observa que se tiene el JSON con los dagtos del libro 1 que en si es un array de objetos que sera un libro n
+
+Algo a tener en cuenta, es que si nosotros no inyectamos 
+
+y hacemos 
+
+public function show($book)
+    {
+        return $book;
+    }
+ Se vera solo el identificador, ya que al momento de defirnir la ruta al momento de acceder a la ruta show, se recibe la variable book que es un numero y eso es lo que recibimos y si no se agrega  este roundbinding tambien se pude directamente  hacer:
+
+ public function show($book)
+    {
+        return Book::find($book);
+    }
+
+ De esta forma encontramos un libro con el id indeicado, en este caso 1
+
+
+ {
+"id": 1,
+"title": "Book 1",
+"created_at": "2022-11-01T20:19:04.000000Z",
+"updated_at": "2022-11-01T20:19:04.000000Z"
+}
+
+
