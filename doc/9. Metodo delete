@@ -18,3 +18,20 @@ No devuelve nada pero el codigo del estado es:
 
 	204No Content 37 ms 284 B
 
+Revisamos laBD
+
+MariaDB [books]> select * from books;
++----+------------------+---------------------+---------------------+
+| id | title            | created_at          | updated_at          |
++----+------------------+---------------------+---------------------+
+|  1 | Book 1           | 2022-11-01 20:19:04 | 2022-11-01 20:19:04 |
+|  2 | Book 2 - Updated | 2022-11-01 20:19:04 | 2022-11-02 07:24:33 |
+|  4 | Book 4           | 2022-11-02 06:53:07 | 2022-11-02 06:53:07 |
++----+------------------+---------------------+---------------------+
+
+
+Observamos que se ha eliminado el registro indicado.
+
+Hasta aca ya se tiene la primera parte del API funcionando
+
+Aunque no se pude quedar asi ya que es necesario agregar test, asi que para ello pasamos a la siguiente seccion 
