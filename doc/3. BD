@@ -1,0 +1,77 @@
+3. BD
+
+Credenciales de configuracion local mode dev:
+
+.env
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=books
+DB_USERNAME=root
+DB_PASSWORD=desarrollo
+
+https://github.com/TablePlus/DBngin
+
+Gestor de la BD
+
+https://dbngin.com/
+
+Se crea una BD lamada:
+books
+
+Collation:
+utf8_general_ci
+
+Una vez que se ha configurado esto, se debe ejecutar la migración.
+
+Ya que esta la bd en blanco 
+
+Para ello en terminal
+
+php artisan migrate
+
+Aun no se ejecuta por que en la migración que se creo con el comando y en especifico en la migración 
+
+
+
+database\migrations\2022_11_02_040718_create_books_table.php
+
+Este archivo lo creo el comando que se ejecuto al principio creando con esto un esquema de la tabla books pero solo con un id con los datos de creacion y actualizacion de los registos
+
+--
+ public function up()
+    {
+        Schema::create('books', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
+    }
+ --
+
+
+ Quedando:
+
+ --
+ public function up()
+    {
+        Schema::create('books', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->timestamps();
+        });
+    }
+ --
+
+
+Ahora si podemos ejecutar la migracion
+
+Tablas ejecutadas:
+
+  2014_10_12_000000_create_users_table ........................................................................... 23ms DONE
+  2014_10_12_100000_create_password_resets_table ................................................................. 31ms DONE
+  2019_08_19_000000_create_failed_jobs_table ..................................................................... 24ms DONE
+  2019_12_14_000001_create_personal_access_tokens_table .......................................................... 31ms DONE
+  2022_11_02_040718_create_books_table ........................................................................... 11ms DONE
+
+
