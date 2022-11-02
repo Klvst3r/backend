@@ -1,0 +1,56 @@
+6. Instalacion de Postman
+
+
+Para ello se utilizara una herameinta llamada postman
+
+https://www.postman.com/downloads/
+
+Siguiendo la guia de instalación
+
+https://www.how2shout.com/linux/2-ways-to-install-postman-on-debian-11-bullseye-or-10-buster/
+
+Procedemos a instalar Postman en mi caso en Debian 11
+
+Comando:
+
+	sudo apt update && sudo apt install wget -y
+
+	wget https://dl.pstmn.io/download/latest/linux64
+
+	sudo tar -xvf linux64 -C /usr/bin
+
+	echo 'export PATH="$PATH:/usr/bin/Postman"' >> ~/.bashrc
+
+
+Now, to run the API testing tool interface, simply type:
+
+	Postman
+
+
+	5. Create Postman Desktop & Launcher Shortcut
+Well, if you don’t want to use Terminal to open the Postman again and again then we can also create its Desktop as well as Launcher shortcut. Here are the steps to follow:
+
+sudo nano /usr/share/applications/Postman.desktop
+Copy and paste the following lines:
+
+[Desktop Entry]
+Name=Postman API Tool
+GenericName=Postman
+Comment=Testing API
+Exec=/usr/bin/Postman/Postman
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=/usr/bin/Postman/app/resources/app/assets/icon.png
+StartupWMClass=Postman
+StartupNotify=true
+Save the file with Ctrl + O and Enter and close editor with Ctrl + X.
+
+Copy the created shortcut to desktop as well:
+
+cp /usr/share/applications/Postman.desktop ~/Desktop/
+Allow launching:
+
+Right-click on the created shortcut of Postman on Desktop and select Properties ⇒  Permissions ⇒ Select the “Allow this file to run as a program” option.
+
+Now, you will have a shortcut in the Application launcher as well as the Desktop.

@@ -32,7 +32,23 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'title' => ['required']
+
+        ]);
+
+        
+        //return  'post';
+        //return $request->all();
+        //return $request;
+        $book = new Book; //Nueva instancia de Eloquent 
+        $book->title = $request->input('title'); //obtencion de los datos
+        //$book->title = $request->name; //Se puede directamente tambien
+        $book->save(); //Se guarda el valor en la BD
+
+        return $book; //Se devuelve el valor del libro
+
     }
 
     /**
@@ -59,7 +75,8 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        return 'patch';
+        
     }
 
     /**
@@ -70,6 +87,6 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        return 'detele';
     }
 }

@@ -1,0 +1,303 @@
+6. Envio de datos a traves de POST
+
+
+Para ello se utilizara una herameinta llamada postman
+
+https://www.postman.com/downloads/
+
+Siguiendo la guia de instalación
+
+https://www.how2shout.com/linux/2-ways-to-install-postman-on-debian-11-bullseye-or-10-buster/
+
+Procedemos a instalar Postman en mi caso en Debian 11
+
+Comando:
+
+	sudo apt update && sudo apt install wget -y
+
+	wget https://dl.pstmn.io/download/latest/linux64
+
+	sudo tar -xvf linux64 -C /usr/bin
+
+	echo 'export PATH="$PATH:/usr/bin/Postman"' >> ~/.bashrc
+
+
+Now, to run the API testing tool interface, simply type:
+
+	Postman
+
+Ejecutamos la App de Postman y creamos despues la cuenta, por ahora porbamos las URL que ya tenemos:
+
+http://127.0.0.1:8000/api/books
+
+Mostrando el resultado de manera satisfactoria
+
+Si accedemos a algun libro especifico tambien debe funcionar
+
+Se esta utilizando el Verbo GET
+
+Ahora cambiamos con el verbo POST
+
+Si se utiliza el verbo solamente con POST
+
+Sin parametros y la salida en HTML sera:
+
+1
+
+
+Ahora volvemos al controlador BookController.php
+
+En el metodo Store
+
+Vamos retornar algo para saber que estamos accediendo a este metodo.
+
+
+
+---
+  public function store(Request $request)
+    {
+        return  'post';
+    }
+---
+
+
+Podrmeos ver la salida
+
+post
+
+
+Ahora si hacemos un patch a este en el metodo update
+
+public function update(Request $request, Book $book)
+    {
+        return 'patch';
+    }
+
+Y en el metodo delete respectivamente:
+
+---
+ public function destroy(Book $book)
+    {
+        return 'delete';
+    }
+---
+
+Enviando un metodo patch a la ruta:
+
+Patch
+Ruta
+http://127.0.0.1:8000/api/books/1
+
+Resultado
+patch
+
+delete:http://127.0.0.1:8000/api/books/1
+delete
+
+
+Pasando al metodo PATCH
+ Podremos retornar todo directamente con:
+
+ ---
+ public function store(Request $request)
+    {
+        //return  'post';
+        //return $request->all();
+        return $request;
+    }
+
+ ---
+
+ Utilizando en Body: form-data
+
+ con 
+
+ key: title
+ value: Book3 
+
+ Entonces para crear un nuevo libro
+
+     public function store(Request $request)
+    {
+        
+        return $request;
+        
+    }
+
+A traves de este request obtenemos los datos yvamos a crear un nuevo libro
+
+Para insertar el tercer libro en la BD
+
+   public function store(Request $request)
+    {
+        
+        $book = new Book; //Nueva instancia de Eloquent 
+        
+        $book->title = $request->input('title'); //obtencion de los datos
+        
+        $book->save(); //Se guarda el valor en la BD
+
+        return $book; //Se devuelve el valor del libro
+
+    }
+
+
+   El resultado de la ejecucion en Postman es:
+
+   {
+    "title": "Book 3",
+    "updated_at": "2022-11-02T06:48:28.000000Z",
+    "created_at": "2022-11-02T06:48:28.000000Z",
+    "id": 3
+}
+
+Revisamos la BD:
+
+MariaDB [books]> select * from books;
++----+--------+---------------------+---------------------+
+| id | title  | created_at          | updated_at          |
++----+--------+---------------------+---------------------+
+|  1 | Book 1 | 2022-11-01 20:19:04 | 2022-11-01 20:19:04 |
+|  2 | Book 2 | 2022-11-01 20:19:04 | 2022-11-01 20:19:04 |
+|  3 | Book 3 | 2022-11-02 06:48:28 | 2022-11-02 06:48:28 |
++----+--------+---------------------+---------------------+
+
+
+Ahor  si vemos ellibro recien creado.
+Hacemos otro get request a Postman y se observaran los tres libros:
+
+Postman
+
+GET:http://127.0.0.1:8000/api/books
+
+[
+    {
+        "id": 1,
+        "title": "Book 1",
+        "created_at": "2022-11-01T20:19:04.000000Z",
+        "updated_at": "2022-11-01T20:19:04.000000Z"
+    },
+    {
+        "id": 2,
+        "title": "Book 2",
+        "created_at": "2022-11-01T20:19:04.000000Z",
+        "updated_at": "2022-11-01T20:19:04.000000Z"
+    },
+    {
+        "id": 3,
+        "title": "Book 3",
+        "created_at": "2022-11-02T06:48:28.000000Z",
+        "updated_at": "2022-11-02T06:48:28.000000Z"
+    }
+]
+
+Esto es basicamente 
+
+S se vuelve a enviar sin titulo, se producira un error de que la llave title no puede ser null, para ello y para proytegernos contra eso y en los headers para que acepte 
+
+KEY: Accept
+Value: application/json
+
+Para visualizar el error en formato JSON
+
+Para visualizar el error a detalle en formato JSON
+
+{
+    "message": "SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'title' cannot be null (SQL: insert into `books` (`title`, `updated_at`, `created_at`) values (?, 2022-11-02 06:55:04, 2022-11-02 06:55:04))",
+    "exception": "Illuminate\\Database\\QueryException",
+    "file": "/var/www/html/dev/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php",
+    "line": 760,
+
+Este error solo se muesra cuando estamos en local, en produccion no se muestra este error, cuando se esta en producción, en el momento del dploy se tocara este punto .
+
+Este error se genera por que no se estan validando para ello.
+
+Antes de crear el nuevo libro hacemos:
+
+
+public function store(Request $request)
+    {
+
+        request->validate([
+            'title' -> ['required']
+
+        ]);
+        //return  'post';
+        //return $request->all();
+        //return $request;
+        $book = new Book; //Nueva instancia de Eloquent 
+        $book->title = $request->input('title'); //obtencion de los datos
+        //$book->title = $request->name; //Se puede directamente tambien
+        $book->save(); //Se guarda el valor en la BD
+
+        return $book; //Se devuelve el valor del libro
+
+    }
+
+
+ De esta forma si no enviamos el titulo nos enviara una advertencia sobre el titulo
+
+
+
+
+ {
+    "message": "The title field is required.",
+    "errors": {
+        "title": [
+            "The title field is required."
+        ]
+    }
+}
+
+
+ Como los mensajes estan en ingles podemos configurarlo a estapol.
+
+En raiz en el archivo /config/app.php
+
+cambiar el time zone y 
+    'locale' => 'en',
+
+Ahora dentro de la carpeta lang
+
+y duplicando la carpete en a es generando todos los archivos de configuracion y ahora toca traducir los mensajes correspondientes traduciendo los archivos.
+
+por ej.
+validation.php 
+
+Buscando required.
+
+Traduciendolo, aunque no es necesario hacerlo manualmente ya que existen repositorio llamado 
+Laravellang 
+
+
+https://github.com/Laravel-Lang/lang
+
+
+https://laravel-lang.com/
+
+Traduciendolo todo automaticamente.
+
+Con esto ya se tiene validado el titulo del libro y si no enviamos no pasa nada, mas sin embargo si lo validamos se crea un nuevo registro 
+
+Con esto regresando al controlador  
+Se valida, se CRra y se obtiene un arespuesta:
+
+public function store(Request $request)
+    {
+
+        $request->validate([
+            'title' => ['required']
+
+        ]);
+
+        
+        
+        $book = new Book; //Nueva instancia de Eloquent 
+        $book->title = $request->input('title'); //obtencion de los datos
+       	$book->save(); //Se guarda el valor en la BD
+
+        
+
+        return $book; //Se devuelve el valor del libro
+
+    }
