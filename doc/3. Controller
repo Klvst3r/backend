@@ -73,6 +73,14 @@ Metodo Index
 
 La clase Book es un modelo de Eloquent que servira para interactuar con la BD especificamente con la tabla Books
 
+---
+ public function index()
+    {
+        return Book::all();
+    }
+---
+
+
 Probando la ruta
 
 en la terminal
@@ -89,3 +97,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 */
+
+
+Accediendo al dominio
+
+http://127.0.0.1:8000/api/books
+
+Se genera un error por que no hay una base de datos de laravel
+
+
+Configurar el archivo .env para definir los datos de conexion
+
