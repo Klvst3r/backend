@@ -38,7 +38,7 @@ class BookController extends Controller
 
         ]);
 
-        
+
         //return  'post';
         //return $request->all();
         //return $request;
@@ -75,7 +75,24 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        return 'patch';
+        //return 'patch';
+        
+        
+
+        $request->validate([
+            'title' => ['required']
+
+        ]);
+
+        
+        $book->title = $request->input('title'); //obtencion de los datos
+        $book->save(); //Se guarda el valor en la BD
+
+
+
+        return $book; //Se devuelve el valor del libro
+
+    
         
     }
 
