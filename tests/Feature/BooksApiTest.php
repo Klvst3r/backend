@@ -24,8 +24,9 @@ class BooksApiTest extends TestCase
         
         $books = Book::factory(4)->create();
 
-        dd($books->count()); //Se cuentan los libros
+        //dd($books->count()); //Se cuentan los libros
         
+        $this->get('/api/books')->dump();
         
 
         
