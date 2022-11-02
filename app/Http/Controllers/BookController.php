@@ -15,7 +15,7 @@ class BookController extends Controller
     public function index()
     {
         //return ['Klvst3r'];
-        /*Devolver todos los libros*/
+        /*Devolver todos los libros de la BD*/
         
         return Book::all();
     }
