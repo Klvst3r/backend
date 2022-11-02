@@ -391,4 +391,66 @@ php artisan test
  Ahora podemos hacer una peticion de tipo GET haciendo una peticin a la ruta devolviendo con el dump()
 
 
- 
+ Ahora si en lugar de utilizar GET  podemos utilizar getJson para enviar los headers de application /JSON
+
+ Para ello 
+
+ ---
+        $books = Book::factory(4)->create();
+
+        $response = $this->getJson(route('books.index'));
+
+         $response->assertJsonFragment([
+            'title' => $books[0]->title
+        ]);
+        
+
+ ---
+
+ Corremos la prueba
+
+ php artisan test
+
+ Y observamos que funciona
+
+ php artisan test
+  
+   PASS  Tests\Feature\BooksApiTest
+  ✓ can get all books
+
+  Tests:  1 passed
+  Time:   0.35s
+
+
+Lo mismo podemos hacer con los demoas libros si se quiere. Se puede verificar el libro el segundo libro y ejecutamos
+
+
+Ahora para el sugundo libro 
+
+---
+ $response->assertJsonFragment([
+            'title' => $books[0]->title
+        ])->assertJsonFragment([
+            'title' => $books[1]->title
+        ]);
+---
+
+Se corre la prueba
+
+php artisan test
+
+Oservando que funciona:
+
+php artisan test
+  
+   PASS  Tests\Feature\BooksApiTest
+  ✓ can get all books
+
+  Tests:  1 passed
+  Time:   0.35s
+
+
+
+Con esto ya se tiene verificada la ruta index.
+
+Vamos ahora con la siguiente ruta

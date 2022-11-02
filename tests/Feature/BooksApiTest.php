@@ -28,10 +28,21 @@ class BooksApiTest extends TestCase
         
         //$this->get('/api/books')->dump();
         
-        dd(route('books.index'));
+       /* dd(route('books.index'));
 
-        $this->get(route('books.index'))->dump();
+        $this->get(route('books.index'))->dump();*/
 
+       // Obtener JSON con getJson
+          
+          $response = $this->getJson(route('books.index'));
+
+          //Para verificar el fragmento de JSON pasamos un array esperando que en la respuesta vemos un lirbo con el titulo del primer libro
+        
+        $response->assertJsonFragment([
+            'title' => $books[0]->title
+        ])->assertJsonFragment([
+            'title' => $books[1]->title
+        ]);
         
     }
 }
