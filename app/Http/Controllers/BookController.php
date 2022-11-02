@@ -104,6 +104,13 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        return 'detele';
+        //return 'detele';
+        
+        $book->delete();
+
+        //return [];
+        
+
+        return response()->noContent();//Devolvera un StatusCode 204 [Vacio]
     }
 }

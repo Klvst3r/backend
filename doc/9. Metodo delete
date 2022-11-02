@@ -1,0 +1,20 @@
+9. Metodo delete
+
+Si en Posntman ahora utilizamos el verbo
+
+DELETE: http://127.0.0.1:8000/api/books/2
+
+La salida sera:
+
+delete
+
+Simplemente ahora hacemos los siguiente en el metodo delete();
+
+En el navegador:
+
+DELETE: http://127.0.0.1:8000/api/books/3
+
+No devuelve nada pero el codigo del estado es:
+
+	204No Content 37 ms 284 B
+
