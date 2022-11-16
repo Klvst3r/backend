@@ -1,4 +1,4 @@
-3. BD
+4. BD
 
 Credenciales de configuracion local mode dev:
 
@@ -57,14 +57,16 @@ Este archivo lo creo el comando que se ejecuto al principio creando con esto un 
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->timestamps();
+            $table->string('title', 200)->unique(); //Campos unicos, para evitar repetir registros.
+            $table->timestamps(); //Para crear registros con fecha de de creación y actualización
         });
     }
  --
 
 
 Ahora si podemos ejecutar la migracion
+
+php artisan migrate
 
 Tablas ejecutadas:
 
