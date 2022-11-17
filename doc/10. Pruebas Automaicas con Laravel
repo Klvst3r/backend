@@ -11,9 +11,9 @@ Existen dos tipos de test
 	/Unit
 
 
-El primero son test de caracteristicas donde se testean diferentes componentes que interactuan entre ellos y en la segunda se testean piezas especificas de codigo, como una clase, una funcion etc.
+El primero son test de caracteristicas donde se testean diferentes componentes que interactuan entre ellos y en la segunda (unit_test) se testean piezas especificas de codigo, como una clase, una funcion etc.
 
-De momento solo se probara con la primera pcion
+De momento solo se probara con la primera pcion (featureTest)
 
 Podremos eleimiar por tanto El ejemplo de las pruebas unitarias
 
@@ -46,7 +46,7 @@ Existe un error en este test:
 
 
 
-Esto es por que se ha quitado la ruta de inicio 
+Esto es por que se ha quitado la ruta de inicio y no se tiene a la ruta welcome
 
 Otra forma de ejecutar los test es de la siguiete manera:
 
@@ -69,7 +69,7 @@ class BooksApiTest extends TestCase
 }
 
 
-Ahor alo primero que hay que testear es que se pueden ller todos los libros
+Ahor alo primero que hay que testear es que se pueden ver todos los libros
 
 class BooksApiTest extends TestCase
 {
@@ -118,6 +118,14 @@ En donde por defecto se tiene SQL y en memoria, vamos a cambiar el nombre de la 
 <env name="DB_DATABASE" value="books_test"/>
 
 Esta base de datso no existe por lo que hay que crearla
+
+phpmyadmin
+    crearBd
+        books_test
+        
+
+Regresamos al archivo BookApiTest.php
+y ya tenemos acceso a esa base de datos, entonces:
 
 Ahora para crear un libro de prueba, al ejecutar el comando 
 
@@ -244,6 +252,34 @@ Generando la siguiente salida en terminal:
 }
  
 ---
+Se pueden crear multiples libros en la base de datos, podemos hacer:
+
+---
+    function can_get_all_books()
+    {
+        $book = Book::factory(4)->create();
+
+
+    }
+---
+
+En terminal:
+php artisan test
+4 // tests/Feature/BooksApiTest.php:27
+
+Una vez que se tienen los registros haremos una petición de tipo get:
+
+
+--BooksApiTest.php
+
+//3. Se hace un peticion de tipo GET
+        $books = Book::factory(4)->create();
+        $this->get('/api/books')->dump(); //Se inspecciona la respuesta
+
+--
+
+
+
 
 Alo que podremos verificar con las tablas creadas:
 
@@ -386,7 +422,13 @@ La URL obtenida en la prueba es:
 php artisan test
  "http://localhost/api/books" // tests/Feature/BooksApiTest.php:31
 
+
+
  Esta es la URL a la que se va a visitar.
+ 
+php artisan test
+"http://localhost/api/books" // tests/Feature/BooksApiTest.php:34
+ 
 
  Ahora podemos hacer una peticion de tipo GET haciendo una peticin a la ruta devolviendo con el dump()
 
