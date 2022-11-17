@@ -27,12 +27,15 @@ Now, to run the API testing tool interface, simply type:
 	Postman
 
 Ejecutamos la App de Postman y creamos despues la cuenta, por ahora porbamos las URL que ya tenemos:
+GET
 
-http://127.0.0.1:8000/api/books
+     http://127.0.0.1:8000/api/books
 
 Mostrando el resultado de manera satisfactoria
 
 Si accedemos a algun libro especifico tambien debe funcionar
+GET:
+        http://127.0.0.1:8000/api/books/1
 
 Se esta utilizando el Verbo GET
 
@@ -40,7 +43,11 @@ Ahora cambiamos con el verbo POST
 
 Si se utiliza el verbo solamente con POST
 
+POST:
+        http://127.0.0.1:8000/api/books
+
 Sin parametros y la salida en HTML sera:
+
 
 1
 
@@ -86,7 +93,7 @@ Enviando un metodo patch a la ruta:
 
 Patch
 Ruta
-http://127.0.0.1:8000/api/books/1
+    http://127.0.0.1:8000/api/books/1
 
 Resultado
 patch
@@ -123,6 +130,17 @@ Pasando al metodo PATCH
         return $request;
         
     }
+    
+La salida es:
+POST:
+    http://127.0.0.1:8000/api/books/
+    
+Salida:
+    {
+    "title": "Book 3"
+}
+
+
 
 A traves de este request obtenemos los datos yvamos a crear un nuevo libro
 
