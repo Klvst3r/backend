@@ -29,10 +29,18 @@ Si accedemos a algun libro especifico tambien debe funcionar
 
 Ej: 
 
+<<<<<<< HEAD:doc/8. Envio de datos a traves de POST
 
 http://127.0.0.1:8000/api/books/1
+=======
+Ejecutamos la App de Postman y creamos despues la cuenta, por ahora porbamos las URL que ya tenemos:
+GET
+
+     http://127.0.0.1:8000/api/books
+>>>>>>> c9036c5f3996bd13c1cb192f1be4bb342b0c4d5f:doc/7. Envio de datos a traves de POST
 
 
+<<<<<<< HEAD:doc/8. Envio de datos a traves de POST
 ---
 {
     "id": 1,
@@ -41,6 +49,11 @@ http://127.0.0.1:8000/api/books/1
     "updated_at": "2022-11-01T20:19:04.000000Z"
 }
 ---
+=======
+Si accedemos a algun libro especifico tambien debe funcionar
+GET:
+        http://127.0.0.1:8000/api/books/1
+>>>>>>> c9036c5f3996bd13c1cb192f1be4bb342b0c4d5f:doc/7. Envio de datos a traves de POST
 
 Se esta utilizando el Verbo GET
 
@@ -48,10 +61,16 @@ Ahora cambiamos con el verbo POST
 
 Si se utiliza el verbo solamente con POST
 
+<<<<<<< HEAD:doc/8. Envio de datos a traves de POST
 
 POST: http://127.0.0.1:8000/api/books
+=======
+POST:
+        http://127.0.0.1:8000/api/books
+>>>>>>> c9036c5f3996bd13c1cb192f1be4bb342b0c4d5f:doc/7. Envio de datos a traves de POST
 
 Sin parametros y la salida en HTML sera:
+
 
 1
 
@@ -100,7 +119,7 @@ Enviando un metodo patch a la ruta:
 
 Patch
 Ruta
-http://127.0.0.1:8000/api/books/1
+    http://127.0.0.1:8000/api/books/1
 
 Resultado
 PATCH by Klvst3r
@@ -169,6 +188,17 @@ Ya vismo que a traves de este request obtenemos los datos y vamos a crear un nue
         return $request;
         
     }
+    
+La salida es:
+POST:
+    http://127.0.0.1:8000/api/books/
+    
+Salida:
+    {
+    "title": "Book 3"
+}
+
+
 
 A traves de este request obtenemos los datos yvamos a crear un nuevo libro
 
@@ -384,6 +414,7 @@ public function store(Request $request)
         return $book; //Se devuelve el valor del libro
 
     }
+<<<<<<< HEAD:doc/8. Envio de datos a traves de POST
 
 Regresando a postman y ejecutando:
 
@@ -424,3 +455,5 @@ MariaDB [books]> select * from books;
 
 
 Con esto regresamos al controlador y con ello tenemos el STORE validado ya que se va validadno y creando
+=======
+>>>>>>> c9036c5f3996bd13c1cb192f1be4bb342b0c4d5f:doc/7. Envio de datos a traves de POST
