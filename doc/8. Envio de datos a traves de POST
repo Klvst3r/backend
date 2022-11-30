@@ -1,44 +1,55 @@
 6. Envio de datos a traves de POST
 
 
-Para ello se utilizara una herameinta llamada postman
-
-https://www.postman.com/downloads/
-
-Siguiendo la guia de instalación
-
-https://www.how2shout.com/linux/2-ways-to-install-postman-on-debian-11-bullseye-or-10-buster/
-
-Procedemos a instalar Postman en mi caso en Debian 11
-
-Comando:
-
-	sudo apt update && sudo apt install wget -y
-
-	wget https://dl.pstmn.io/download/latest/linux64
-
-	sudo tar -xvf linux64 -C /usr/bin
-
-	echo 'export PATH="$PATH:/usr/bin/Postman"' >> ~/.bashrc
-
-
-Now, to run the API testing tool interface, simply type:
-
-	Postman
-
 Ejecutamos la App de Postman y creamos despues la cuenta, por ahora porbamos las URL que ya tenemos:
 
 http://127.0.0.1:8000/api/books
 
 Mostrando el resultado de manera satisfactoria
 
+
+---
+[
+    {
+        "id": 1,
+        "title": "Book 1",
+        "created_at": "2022-11-01T20:19:04.000000Z",
+        "updated_at": "2022-11-01T20:19:04.000000Z"
+    },
+    {
+        "id": 2,
+        "title": "Book 2",
+        "created_at": "2022-11-01T20:19:04.000000Z",
+        "updated_at": "2022-11-01T20:19:04.000000Z"
+  
+
+---
+
 Si accedemos a algun libro especifico tambien debe funcionar
+
+Ej: 
+
+
+http://127.0.0.1:8000/api/books/1
+
+
+---
+{
+    "id": 1,
+    "title": "Book 1",
+    "created_at": "2022-11-01T20:19:04.000000Z",
+    "updated_at": "2022-11-01T20:19:04.000000Z"
+}
+---
 
 Se esta utilizando el Verbo GET
 
 Ahora cambiamos con el verbo POST
 
 Si se utiliza el verbo solamente con POST
+
+
+POST: http://127.0.0.1:8000/api/books
 
 Sin parametros y la salida en HTML sera:
 
@@ -56,21 +67,24 @@ Vamos retornar algo para saber que estamos accediendo a este metodo.
 ---
   public function store(Request $request)
     {
-        return  'post';
+        return  'POST by Klvst3r';
     }
 ---
 
 
 Podrmeos ver la salida
 
-post
+POST by Klvst3r
+
+Podemo ver el resultado en Postman, 
+
 
 
 Ahora si hacemos un patch a este en el metodo update
 
 public function update(Request $request, Book $book)
     {
-        return 'patch';
+        return 'PATCH by Klvst3r';
     }
 
 Y en el metodo delete respectivamente:
@@ -78,7 +92,7 @@ Y en el metodo delete respectivamente:
 ---
  public function destroy(Book $book)
     {
-        return 'delete';
+        return 'DELETE by Klvst3r';
     }
 ---
 
@@ -89,11 +103,26 @@ Ruta
 http://127.0.0.1:8000/api/books/1
 
 Resultado
-patch
+PATCH by Klvst3r
 
 delete:http://127.0.0.1:8000/api/books/1
-delete
+Resultado
 
+Delete by Klvst3r
+
+
+
+Regresamos al metodo store
+De momento para instpeccionar el request vamos a retornarlo directamente 
+ ---
+ public function store(Request $request)
+    {
+      
+        return $request->all();
+  
+    }
+
+ ---
 
 Pasando al metodo PATCH
  Podremos retornar todo directamente con:
@@ -108,6 +137,12 @@ Pasando al metodo PATCH
 
  ---
 
+Reultado 
+[]
+
+Observando que en la salida no hemos enviado ningun parametro para ello:
+
+
  Utilizando en Body: form-data
 
  con 
@@ -115,6 +150,17 @@ Pasando al metodo PATCH
  key: title
  value: Book3 
 
+ Al enviar recibimos:
+
+ ---
+
+ {
+    "title": "Book 3"
+}
+ ---
+
+
+Ya vismo que a traves de este request obtenemos los datos y vamos a crear un nuevo libro
  Entonces para crear un nuevo libro
 
      public function store(Request $request)
@@ -192,8 +238,15 @@ GET:http://127.0.0.1:8000/api/books
 ]
 
 Esto es basicamente 
+Ahora si se vuelve a enviar sin titulo, se producira un error de que la llave title no puede ser null, para ello y para proytegernos contra eso y en los headers para que acepte 
 
-S se vuelve a enviar sin titulo, se producira un error de que la llave title no puede ser null, para ello y para proytegernos contra eso y en los headers para que acepte 
+Es decir en postpan utilizamos el metodo POST y en Body
+form-data:
+KEY [vacio]
+Value: Libro 4
+
+Para ello vamos a los header para indicarle que acepte  el Header aplication Json para que nos muestre el error 
+
 
 KEY: Accept
 Value: application/json
@@ -208,9 +261,12 @@ Para visualizar el error a detalle en formato JSON
     "file": "/var/www/html/dev/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php",
     "line": 760,
 
-Este error solo se muesra cuando estamos en local, en produccion no se muestra este error, cuando se esta en producción, en el momento del dploy se tocara este punto .
+Este error solo se muesra cuando estamos en local, en produccion no se muestra este error, 
+cuando se esta en producción, en el momento del dploy se tocara este punto .
 
-Este error se genera por que no se estan validando para ello.
+Este error se genera por que no se estan validando la peticion para ello.
+
+Vamos a validarlo 
 
 Antes de crear el nuevo libro hacemos:
 
@@ -218,8 +274,8 @@ Antes de crear el nuevo libro hacemos:
 public function store(Request $request)
     {
 
-        request->validate([
-            'title' -> ['required']
+        $request->validate([
+            'title' => ['required']
 
         ]);
         //return  'post';
@@ -250,7 +306,7 @@ public function store(Request $request)
 }
 
 
- Como los mensajes estan en ingles podemos configurarlo a estapol.
+ Como los mensajes estan en ingles podemos configurarlo a español.
 
 En raiz en el archivo /config/app.php
 
@@ -266,6 +322,33 @@ validation.php
 
 Buscando required.
 
+ej.
+
+Cambiamos la traducción 
+
+/lang/es/validation.php
+
+...
+'required' => 'El campo :attribute es obligatorio',
+...
+
+Visualizamos el resultado en Postman
+
+POST: http://127.0.0.1:8000/api/books
+
+El resultado sera:
+
+---
+{
+    "message": "El campo title es obligatorio",
+    "errors": {
+        "title": [
+            "El campo title es obligatorio"
+        ]
+    }
+}
+---
+
 Traduciendolo, aunque no es necesario hacerlo manualmente ya que existen repositorio llamado 
 Laravellang 
 
@@ -279,8 +362,8 @@ Traduciendolo todo automaticamente.
 
 Con esto ya se tiene validado el titulo del libro y si no enviamos no pasa nada, mas sin embargo si lo validamos se crea un nuevo registro 
 
-Con esto regresando al controlador  
-Se valida, se CRra y se obtiene un arespuesta:
+Con esto regresando al controlador y ya teniendo validado el titulo del libro  
+Se valida, se crea y se obtiene un arespuesta:
 
 public function store(Request $request)
     {
@@ -301,3 +384,43 @@ public function store(Request $request)
         return $book; //Se devuelve el valor del libro
 
     }
+
+Regresando a postman y ejecutando:
+
+POST: http://127.0.0.1:8000/api/books
+
+
+
+Y enviamos el titulo de la seccion "body"
+KEY: title
+VALUE: Book 4
+
+
+Veremos que se crea el libro numero 4
+
+
+---
+{
+    "title": "Book 4",
+    "updated_at": "2022-11-07T03:00:41.000000Z",
+    "created_at": "2022-11-07T03:00:41.000000Z",
+    "id": 5
+}
+---
+Revisando en la BD:
+
+
+MariaDB [books]> select * from books;
++----+--------+---------------------+---------------------+
+| id | title  | created_at          | updated_at          |
++----+--------+---------------------+---------------------+
+|  1 | Book 1 | 2022-11-01 20:19:04 | 2022-11-01 20:19:04 |
+|  2 | Book 2 | 2022-11-01 20:19:04 | 2022-11-01 20:19:04 |
+|  3 | Book 3 | 2022-11-07 02:40:25 | 2022-11-07 02:40:25 |
+|  4 | Book 4 | 2022-11-07 02:45:16 | 2022-11-07 02:45:16 |
+|  5 | Book 5 | 2022-11-07 03:00:41 | 2022-11-07 03:00:41 |
++----+--------+---------------------+---------------------+
+5 rows in set (0.001 sec)
+
+
+Con esto regresamos al controlador y con ello tenemos el STORE validado ya que se va validadno y creando

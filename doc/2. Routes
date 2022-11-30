@@ -1,12 +1,136 @@
 2. Routes
 
-Terminal
 
-php artisan route:list
+
+Como vamos a costruir un sistema de rutas vamos a abrir el archivo de rutas api
 
 /routes/api.php
 
-php artisan make:model Book -mf --api 
+La principal diferencia del archivo rutas api.php con el otro archivo de rutas wen.php son sus middlewares para saber que midlewares utiilzar caca ruta podemos ir al archivo
+
+app/Http/Kernel.php
+
+
+Y debajo del middleware groups
+
+Estos son los middleware que se palican al archivo de rutas web y api respectivamente, basicamente la api no necesita de sesiones o cookies ni de compartir errores, pero si necesita hacer throttling es decir agregar un limite de peticiones en un dterminado tiempo.
+
+De momento en el archivo de rutas 
+
+/routes/api.php
+
+Se tiene definida por default la ruta users
+
+---
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+
+---
+
+Para poder visualizar estas rutas, podemos ejecutar el comando siguiente en la terminal
+
+
+Terminal
+
+
+Ver el listado de rutas que nos trae laravel por defecto
+$ php artisan route:list
+
+
+
+  GET|HEAD   / ............................................................................................................. 
+  POST       _ignition/execute-solution ...... ignition.executeSolution › Spatie\LaravelIgnition › ExecuteSolutionController
+  GET|HEAD   _ignition/health-check .................. ignition.healthCheck › Spatie\LaravelIgnition › HealthCheckController
+  POST       _ignition/update-config ............... ignition.updateConfig › Spatie\LaravelIgnition › UpdateConfigController
+  GET|HEAD   api/user ...................................................................................................... 
+  GET|HEAD   sanctum/csrf-cookie ......................... sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
+
+  Las rutas  de ignition las pdemos ignorear es decir 
+
+POST       _ignition/execute-solution ...... ignition.executeSolution › Spatie\LaravelIgnition › ExecuteSolutionController
+GET|HEAD   _ignition/health-check .................. ignition.healthCheck › Spatie\LaravelIgnition › HealthCheckController
+POST       _ignition/update-config ............... ignition.updateConfig › Spatie\LaravelIgnition › 
+
+
+Son para manejar errorer, la ruta que dice sanctum tambien se puede ignorar
+  GET|HEAD   sanctum/csrf-cookie ......................... sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
+
+Lo que observamos es que tenemos una primera ruta que tenemos e el archivo de rutas web.php
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Si la quitamos y ejecutamos nuevamente el comando 
+
+$ php artisan route:list, vemos que desaparece
+
+esta ruta
+
+ GET|HEAD   / ........
+
+ Ahora.
+
+ La que tenemos en el archivo de rutas api.php
+
+  GET|HEAD   api/user ..
+
+  Observando que tiene el prefijo api/user, pero si observamos en la definición  no le estamos agregando el prefijo.
+
+Esto es por que en el archivo 
+
+    app/Providers/RouteServiceProvider.php
+
+En el metodo boot, estamos registrando ambos archivos, el de rutas web y el de rutas api.
+Pero en el de rutas api, se le esta agregando el profijo api
+---
+$this->routes(function () {
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
+        });
+
+---
+
+Pdriamos modifiralo por ejemplo para darle una versión 
+
+---
+->prefix('api/v1')
+---
+
+Y a futuro podriamos crear otro registro para crear los registros de la versión 2. Se tiene esta flexibilidad..
+
+Por ahora vamos acrear las rutas
+
+Dentro del archivo
+/routes/api.php
+
+Quitamos la siguiete ruta:
+
+---delete code
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+---
+
+Ahora desde la terminal vamos a crear varios archivos a la vez
+
+Creamos el modelo Book 
+  $ php artisan make:model Book -mf --api 
+
+
+Creando con esto los siguientes archivos
+
+ app/Http/Controllers/BookController.php
+ app/Models/Book.php
+ database/factories/BookFactory.php
+ database/migrations/2022_11_04_195711_create_books_table.php
+
+
 
 	-m Parametro para crear la migración al modelo
 	-f Para la creación de un factory
@@ -27,33 +151,49 @@ Archivos generados
    [Controlador]
 
 
-Definicion de las rutas
+Ahora toca ir a la Definicion de las rutas
+
+Las rutas que se necesitan son: 
+
+Utilizando la arquitectura REST que nos indica que debemos agregar las siguientes rutas
+
 
 REST API
 
-Verbo HTTP 		Path 				Nombre
-GET				/books 				index
-GET 			/books/{id}			show
+Verbo HTTP 		Path 				  Nombre
+GET				   /books 				  index
+GET 			   /books/{id}			show
 -------------------------------------------
-GET				/books/create 		create [Sin utilizar]
+GET				   /books/create 		create [Sin utilizar]
 -------------------------------------------
-POST 			/books 				store
+POST 			   /books 				  store
 -------------------------------------------
-GET				/books/{id}/edit	edit	[Sin utilizar]
+GET				   /books/{id}/edit	edit	[Sin utilizar]
 -------------------------------------------
-PATCH			/books/{id}			update
-DELETE 			/books/{id}			delete
+PATCH			   /books/{id}			update
+DELETE 			 /books/{id}			delete
 
 
+
+Ahora como lo que se construira es una API, no vamos a necesitar todas.
+Quedando 5 sutas a implementar solamente.
+
+Regresando al archivo de rutas de la api
 
 api.php
 [Creado con el comando make:module]
+Recibiendo dos parametros el primero es el nombre del recurso y el segundo es el controlador que va a rpocesar las rutas
+---
 Route::apiResource('books', BookController::class);
+---
+
+Esto controlador se creo con el comando make:model
 
 books - Nombre del recurso
 BookController::class	- controlador que procesara las rutas
 
 
+Ahora podremos ejecutar nuevamente
 php artisan route:list
 
 
@@ -71,6 +211,9 @@ GET|HEAD        / ..............................................................
   GET|HEAD        sanctum/csrf-cookie .................... sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
 
 
+
+Vemos que tenemos las rutas para definir
+
 Rutas
 
 books.index [Para obtener todos los libros]
@@ -81,7 +224,119 @@ books.destroy [Para destruir un libro]
 
 En la parte delante de las rutas esta el metodo del controlador se esta apuntando, es decir esta ruta esta apuntando al metodo index | store | show | update | destroy dentro del Controlador BooksController
 
-
+Abrir el archivo Siguiente
 ---
 app/Http/Controllers/BooksController.php
+
+Pare verificar que creo el comando
+
+Con todos los metodos ya listos para utilizarse
+
+---
+class BookController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Book $book)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Book $book)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Book $book)
+    {
+        //
+    }
+}
+---
+
+
+egresar todos los libros
+Book: Es el modelo de Eloquent para interacturar con la BD, especificamente con la tabla Book
+        
+        return Book:all();
+
+Para probar esta ruta, hay que levantar un servicio
+
+$ php artisan serve
+
+Devolviendo un error 404 por que en el archivo de rutas no existe en web.php
+
+Si devolvemos tenemos la pagina preincipal de Laravel
+
+
+Ahora vamos a aceder el dominio api
+
+por ende
+
+127.0.0.1:8000/api/books
+
+Devolviendo el siguiente error
+
+SQLSTATE[HY000] [1049] Unknown database 'books'
+
+
+Y esto es por que no hay una base de datos books
+
+Para Estar claros en el archivo de rutas api.php, estamos accediendo a las rutas y estamos accediendo a la ruta:
+
+
+con 
+
+php artisan route:list
+
+Accediendo a 
+
+  GET|HEAD        api/books ............................................................. books.index › BookController@index
+
+Esta ruta es el indice del metodo indicie
+
+
+Lo que se quiere no es devolver un areglo vacio o con un JSON
+
+   return ['Klvst3r'];
+        
+Sin devover todos los libros de la BD y es por elo que arroja esta Bd de que no existe la BD, asi que vamos a configurar la BD
 

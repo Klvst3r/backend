@@ -1,6 +1,6 @@
 5. Paginacion
 
-Casi nunca se utiliza l vista 
+Casi nunca se utiliza la vista 
 
  public function index()
     {

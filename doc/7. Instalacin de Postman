@@ -1,6 +1,24 @@
 6. Instalacion de Postman
 
 
+
+Para mantener las cosas simples en el index se utiliza el metodo all
+
+--
+ return Book::all();
+--
+
+Los mestoso index y show fueron faciles por que estamos utilizando el metodo GET cada vez que accedemos a una url
+
+Pero en este caso ahora necesitamos enviar datos a traves de 
+
+POST - envio de datos (store)
+PATCH - Para actualizar datos (update)
+DESTORY - Para eliminar datos (delete)
+
+
+
+
 Para ello se utilizara una herameinta llamada postman
 
 https://www.postman.com/downloads/

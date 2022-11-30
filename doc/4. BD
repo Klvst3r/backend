@@ -1,6 +1,10 @@
 3. BD
 
+
+
 Credenciales de configuracion local mode dev:
+
+Definimos los datos de conexin
 
 .env
 
@@ -29,7 +33,7 @@ Ya que esta la bd en blanco
 
 Para ello en terminal
 
-php artisan migrate
+    $ php artisan migrate //aun no ejecutar contiuar
 
 Aun no se ejecuta por que en la migración que se creo con el comando y en especifico en la migración 
 
@@ -65,6 +69,11 @@ Este archivo lo creo el comando que se ejecuto al principio creando con esto un 
 
 
 Ahora si podemos ejecutar la migracion
+
+
+    $ php artisan migrate 
+
+    
 
 Tablas ejecutadas:
 

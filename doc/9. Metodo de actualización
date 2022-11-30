@@ -32,6 +32,12 @@ Podemos copiar el codigo del Storage dentro del Metodo Update tendremos
 
  La diferencia es que en el metodo anterior se obtiene el libro de manera automatica ya que ahora es con el verbo PATCH
 
+
+---
+ public function update(Request $request, Book $book)
+---
+
+
  PATCH:  http://127.0.0.1:8000/api/books/2
 
  El resultado sera:
@@ -92,21 +98,54 @@ Pero en Body:
 KEY:title
 Value: Book 2 - Updated
 
-Pero con el body con :
+
+Nos mostrara un error y es que PATCH y PUT funcionan de forma distinta por lo que arrojara;
+
+---
+{
+    "message": "El campo title es obligatorio",
+    "errors": {
+        "title": [
+            "El campo title es obligatorio"
+        ]
+    }
+}
+---
+
+Pero debemos utilizar la opcion con el body con :
 	x-www-form-urlencoded
 
-	
+Copiamos los valores:
 
-Si observamos
+KEY:title
+Value: Book 2 - Updated
+
+
+Ahora si funciona:
+
+Resultado:
+{
+    "id": 2,
+    "title": "Book 2 - Updated",
+    "created_at": "2022-11-01T20:19:04.000000Z",
+    "updated_at": "2022-11-07T03:11:10.000000Z"
+}
+
+
+
+Si observamos en la BD
 
 MariaDB [books]> select * from books;
 +----+------------------+---------------------+---------------------+
 | id | title            | created_at          | updated_at          |
 +----+------------------+---------------------+---------------------+
 |  1 | Book 1           | 2022-11-01 20:19:04 | 2022-11-01 20:19:04 |
-|  2 | Book 2 - Updated | 2022-11-01 20:19:04 | 2022-11-02 07:24:33 |
-|  3 | Book 3           | 2022-11-02 06:48:28 | 2022-11-02 06:48:28 |
-|  4 | Book 4           | 2022-11-02 06:53:07 | 2022-11-02 06:53:07 |
+|  2 | Book 2 - Updated | 2022-11-01 20:19:04 | 2022-11-07 03:11:10 |
+|  3 | Book 3           | 2022-11-07 02:40:25 | 2022-11-07 02:40:25 |
+|  4 | Book 4           | 2022-11-07 02:45:16 | 2022-11-07 02:45:16 |
+|  5 | Book 5           | 2022-11-07 03:00:41 | 2022-11-07 03:00:41 |
++----+------------------+---------------------+---------------------+
+5 rows in set (0.001 sec)
 
 
 Ahora ya estan actualizados los datos en especifico el campo 2 que fue el que se envio a actualizar la informacion dle titulo

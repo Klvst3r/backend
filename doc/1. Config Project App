@@ -1,3 +1,39 @@
+Creación del Proyecto 
+
+Primera Forma - Utilizando El instalador
+laravel new
+
+Segunda Forma - Utilizando Composer
+composer create project laravel/laravel back-end 
+
+
+Despues de hacer una instalacion Laravel Fresca  es inicizalizar el repositorio de git
+
+Si utilizamos el instalador podremos utilizar el comando, para crear un repositorio automaticamente 
+
+    laravel new back-end --git  
+
+
+Si ya contamos con git simplemente ingresamos a la carpeta creada con el proyecto de laravel
+
+    cd /backend
+
+Inicializamos el repositorio
+    git init
+
+Agregamos todo al stage agregando un commit
+
+    git add .
+    git commit -m "Setup Laravel API"
+
+Arbrimos el proyecto en el editr de codigo.
+
+Para modificar el REDAME
+
+Con marckdown 
+
+    # Books API
+
 
 Skip to content
 Pull requests

@@ -1,0 +1,277 @@
+Rutas
+-----
+[web.php]
+//Visualización de home
+Route::get('/', function(){
+    return 'Home';
+});
+
+
+Controllers
+-----
+php artisan make:controller BookControlle
+
+
+Migrations
+-----
+php artisan migrate //Ejecuta la migracion, crando la estructura de la bd
+php artisan migrate:reset //Devuelve todas las migraciones ejecutadas en orden inverso
+php artisan migrate:fresh // Ejecuta primero un reset, ejecutando los metodos down() de las migraciones, en orden inverso
+
+Seria el equivalente
+
+	php artisan migrate:reset
+	php artisan migrate
+
+
+php artisan migrate:rollback //Regresa el ultimo lote de migraciones ejecutadas
+
+
+
+Seeds
+-----
+php artisan make:seeder BookSeeder //Crea un Seeder llamado BookSeeder
+
+
+Test
+-----
+php artisan make:test BookTest
+
+Ejecutando pruebas unitarias
+-----
+>vendor /bin/phpunit
+
+Alias Pruebas Unitarias
+>alias t=vendor /bin/phpunit
+>t
+
+//Se comienza a crear las rutas en api.php
+
+Para crear varuios archivos a la vez, 
+
+php artisan make:model Book -mf --api
+
+
+
+Se definen las rutas en consideracion con el RESP API
+
+
+Posterior a ello, se listan rutas
+php artisan route:list
+
+GET|HEAD        api/books ................................................................................. books.index › BookController@index
+POST            api/books ................................................................................. books.store › BookController@store
+GET|HEAD        api/books/{book} .......................................................................... books.show › BookController@show
+PUT|PATCH       api/books/{book} .......................................................................... books.update › BookController@update
+DELETE          api/books/{book} .......................................................................... books.destroy › BookController@destroy
+
+Se define la rutas 5 definidas, la rutas trespectivas:
+index: Para obtener todos los libros
+store: Almacenar un libro
+show: mostrar un libro
+update: Actualizar un libro
+destroy: Eliminar un libro
+
+Tambien se indica el metodo del controlador se esta apuntando.
+
+Despues de configurar la Bd en el archivo .env se deberan ejecutar las migraciones por que la Bd esta en blanco totalmente.
+
+Pero antes hay que modificar 
+
+php artisan migrate
+
+Se tienen ya dos rutas listas dentro del Controlador BookController
+
+Index: para visualizar todos los datos registrados en la Bd
+Show: Para visualizar un registro por su ID
+
+Rara vez se pueden visualizar todos los resultados con el metodo all(), por lo que se puede utilizar el metodo paginate().
+
+Para utilizar los otros tres metodos se utiliza Postman
+
+Probando las URL ya existentes.
+
+El metodo delete y update son muy similares, se verifican su funcionamiento y se trabaja con el ultimo metodo "delete"
+
+Al correr las pruebas en ocaciones puede generar la siguiente salida: 
+
+phpunit command not found
+
+Podemos solucionarlo con:
+
+When you run $ phpunit on the command-line (e.g. bash), the system will look for phpunit using the PATH variable, from the bash docs:
+
+PATH   The search path for commands.  It is a colon-separated list of directories in which the shell
+      looks for commands (see COMMAND EXECUTION below).  A zero-length (null) directory name in the
+      value of PATH indicates the current directory.  A null directory name may appear as two adja‐
+      cent  colons,  or as an initial or trailing colon.  The default path is system-dependent, and
+      is set by the administrator who installs bash.  A common value is ``/usr/local/bin:
+      /usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin''.
+
+You can bypass search using the PATH variable by using an absolute path:
+
+$ /absolute/path/to/vendor/bin/phpunit
+
+Or a relative path (the stop character (.) means the current directory):
+
+$ ./vendor/bin/phpunit
+
+You actually omit the stop slash part: $ vendor/bin/phpunit.
+
+To avoid having to type the path you can use a bash alias (if you're using bash):
+
+$ alias phpunit='./vendor/bin/phpunit'
+
+Or to save typing:
+
+$ alias p='./vendor/bin/phpunit'
+
+La respue4sta a nuestro problema local fue utilizando
+
+$ alias t='./vendor/bin/phpunit'
+
+
+Referencia:
+	https://stackoverflow.com/questions/58159958/phpunit-command-not-found-after-installing-using-composer
+	https://askubuntu.com/questions/17536/how-do-i-create-a-permanent-bash-alias
+	https://freek.dev/2142-a-bash-function-to-run-tests-for-both-phpunit-and-pest
+
+
+Al devolver los resultados en las pruebas autimaticas podemos hacer los siguiente para cada metodo en este caso la ruta index
+
+Para mostrar otro resultado podemos hacer lo siguiente:
+
+
+     /** @test */
+
+    function can_get_all_books()
+    {
+    ...
+    }
+
+O bien podemos  utilizar el prefijo test de la siguiente manera:
+
+	function test_can_get_all_books()
+    {
+    ...
+    }
+
+En nuestro caso utilizamos la anotación inicial:
+     /** @test */    
+
+Se rpocede con el siguiente metodo:
+
+- Revisar un libro:
+
+
+
+Se revisan las pruebas automaticas:
+
+t
+PHPUnit 9.5.26 by Sebastian Bergmann and contributors.
+
+unction can_get_one_book()
+    {
+        //1.//Se crea un libro con factory
+        
+        $book = Book::factory()->create();
+
+         //Un getJson a la ruta books.show, para que genere la ruta. 
+        dd(route('books.show', $book)); 
+        //Guardando la respuesta 
+        $response$this->getJson(route('books.show', $book));
+        //Generamos la verificación
+        $response->assertJsonFragment([
+            'title' => $book->title
+        ]);
+    }
+
+Corremos la ruta:
+t
+
+	."http://localhost/api/books/5"
+
+Para ejecutar todos los test 
+
+Ya se tiene testeada la ruta para todos los libros y un libro. 
+
+3. ahora se va a testear la ruta que crea un libro
+
+function can_create_books()
+    {
+        
+
+        $this->postJson(route('books.store'), [
+            'title' => 'My new book'
+        ])->assertJsonFragment([
+            'title' => 'My new book'
+        ]);
+
+        
+        $this ->assertDatabaseHas('books', [
+           'title' => 'My new book' 
+        ]);
+
+    }
+
+Ajecutamos en terminal la prueba   
+
+t
+PHPUnit 9.5.26 by Sebastian Bergmann and contributors.
+
+."http://localhost/api/books/5" // tests/Feature/BooksApiTest.php:72
+
+
+Vemos que funciona
+
+Verificamos en la Base de datos el metodo asertDatabaseHas() que recibe como primer parametro 
+
+Hasta aca no se esta verificando la  validación por ejemplo si vamos al BookController en el metodo store, si quitamos la validación el test sigue pasando
+
+Y no queremos eso, ya que queremos que el test nos avise en caso de que haya algun error en nuestro codigo, por ello estamos validando y queremos que el test nos avise.
+
+En estos casos, utilizamos lo que se conoce como un test de regresión, es decir encontramos el error. Lo hacemos fallara con un test con un 
+
+postJson a la misma ruta, y no pasamos nada como segundo parametro, es decir 
+
+---BooksApiTest
+
+Utilizamos un test de regresión para hacerlo falla, mediante el metodo asserJsonValidationErrorFor
+        //donde enviamos un PostJson y esperamos un error de validación en el campo title 
+        $this->postJson(route('books.store'),[])
+        ->assertJsonValidationErrorFor('title');
+
+---
+
+Ejecutamos prueba
+
+Jasta que todo pase correctamente.
+
+Ahora pasamos a los dos ultimos metodos.
+
+Se va a testear libros,
+
+Sera necesario un libro para actualizar, haciendo un patch JSON en este caso a la ruta Books Update, como segundo parametro de la funcion route 
+pasamos el libro para generar la ruta, y como segundo parametro para el patch Json.
+
+Pasamos el titulo editado.
+
+---BooksapiTest
+
+/** @test */
+
+    function can_update_books()
+    {
+       $books = Book::factory()->create(); 
+
+       $this->patchJson(route('books.update', $book), [
+            'title' => 'Edited book'
+       ])->assertJsonFragment([
+            'title' => 'Edited book'
+       ]);
+    }
+
+---
+
+
+Esto mismo vamos a esperar en la respuesta 

@@ -454,3 +454,180 @@ php artisan test
 Con esto ya se tiene verificada la ruta index.
 
 Vamos ahora con la siguiente ruta
+
+BooksApiTest - Metodo can_get_all_books()
+---
+
+---
+
+Si no utilizamos 
+
+/** @test */
+
+Podemos utilizar el prefijo test para que funcione la prueba ese era uno de mis errores de ejecuación
+
+Ej.
+
+ /** @test */
+    //segunda ruta
+    
+
+     /** @test */
+
+    function can_get_one_book()
+    {
+        $book = Book::factory()->create(); //Se crea un libro con factory
+
+
+        //Para revisar la ruta
+        dd(route('books.show', $book));
+
+
+        //Se hace un getJson a la ruta books.show, pasandole el libro como parametro para que genere la ruta
+        $this->getJson(route('books.show', $book)) 
+    }
+Como es mi caso se prefiere utilizar la anotación
+
+
+--------------------
+
+Obtener un libro, creando un libro con factory
+
+Se corre la prueba
+
+php artisan test
+
+php artisan test
+  "http://localhost/api/books/5" // tests/Feature/BooksApiTest.php:60
+
+
+Podemos ver la URL a la que se va a acceder con getJson guardando la respuesta:
+
+---
+
+ $response = $this->getJson(route('books.show', $book)); 
+
+
+        $response->assertJsonFragment([
+            'title' => $book->title
+        ]);
+---
+
+
+php artisan test
+
+php artisan test
+  "http://localhost/api/books/5" // tests/Feature/BooksApiTest.php:60
+
+
+  Como podemos ver funciona
+
+  A veces cuando estamos creando test y luego de haber creado la implementacion lo que se suele hacer es ejecutar todos los test y volver 
+
+  Modificando el controlador
+
+  Por ejemplo en 
+
+  BookController.php
+
+  ---
+
+ quitar del primer metodo:
+
+ // return Book::all();
+  ---
+
+  Observamos que en este caso fallo la prueba 
+
+
+
+    //Verificar libros
+    /** @test */
+
+    function can_create_books()
+    {
+         $this->postJson(route('books.store'), [
+            'title' => 'My new Book'
+        ])->assertJsonFragment([
+            'title' => 'My new Book'
+        ]);
+    }
+
+
+    Adicional a esto se va a verificar en la BD pudiendo utilizar;
+
+    No se esta verificando la validación
+
+    con
+
+    ---
+
+    //Verificar libros
+    /** @test */
+
+    function can_create_books()
+    {
+         $this->postJson(route('books.store'), [
+            'title' => 'My new Book'
+        ])->assertJsonFragment([
+            'title' => 'My new Book'
+        ]);
+
+
+        //Para verificar
+        
+        $this->assertDatabaseHas('books', [
+            'title' => 'My new Book'
+        ]);
+
+
+    }
+
+    ---
+
+    Ya que si vamos al BookController en el metodo estore
+
+
+      /*   $request->validate([
+            'title' => ['required']
+
+        ]);*/
+
+
+        y corremos la prueba
+
+        php artisan test
+
+        La prueba sigue pasando y no queremos eso queremos que el test nos avise en caso de que exista algun error en nuestro codigo, en este caso no estamos validadndo y queresmo   fortuna y que el test nos avise.
+
+        Para ello utilizamos lo que se conoce como un test de regresión, es decir . se encuentra el error lo hacemos fallar con un test agregando ahi mismo en BooksApiTest.php
+
+
+---
+    
+      $this->postJson(route('books.store'), [])->assertJsonValidationErrorFor('title');
+
+---
+++Esperamos este error, enviando un postJson esperando un error de validation en el campo title, ejecutamos la prueba
+
+php artisan test
+
+Ahora genera un erro
+
+ at tests/Feature/BooksApiTest.php:79
+     75▕ 
+     76▕     function can_create_books()
+     77▕     {
+     78▕ 
+  ➜  79▕          $this->postJson(route('books.store'), [])->assertJsonValidationErrorFor('title');
+     80▕ 
+     81▕ 
+     82▕          $this->postJson(route('books.store'), [
+     83▕             'title' => 'My new Book'
+
+
+  Tests:  2 failed, 1 passed
+
+
+Ahora podremos agregar la validacion en BookController
+
