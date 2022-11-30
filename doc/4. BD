@@ -1,4 +1,4 @@
-4. BD
+3. BD
 
 
 
@@ -61,8 +61,8 @@ Este archivo lo creo el comando que se ejecuto al principio creando con esto un 
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 200)->unique(); //Campos unicos, para evitar repetir registros.
-            $table->timestamps(); //Para crear registros con fecha de de creación y actualización
+            $table->string('title');
+            $table->timestamps();
         });
     }
  --
@@ -70,14 +70,10 @@ Este archivo lo creo el comando que se ejecuto al principio creando con esto un 
 
 Ahora si podemos ejecutar la migracion
 
-<<<<<<< HEAD:doc/4. BD
 
     $ php artisan migrate 
 
     
-=======
-php artisan migrate
->>>>>>> c9036c5f3996bd13c1cb192f1be4bb342b0c4d5f:doc/3. BD
 
 Tablas ejecutadas:
 

@@ -1,0 +1,19 @@
+Error en las pruebas automaticas
+
+
+https://laracasts.com/discuss/channels/laravel/test-unit-not-found
+
+Test unit not found
+I get this error
+
+Copy Code
+Test directory "/home/myusername/myproject/./tests/Unit" not found
+When I run
+
+Copy Code
+php artisan test
+
+
+Solution:
+	The Unit folder was deleted. I created it and it works.
+
