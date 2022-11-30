@@ -161,3 +161,9 @@ For git version 1.7.2+, credit to François Marier in “Cherry-picking a range 
 
 git cherry-pick <first-commit-sha>^..<last-commit-sha>
 You should now be able to git push the local branch to the remote without getting rejected.
+
+Referenci adicional
+
+https://www.positioniseverything.net/updates-were-rejected-because-the-tip-of-your-current-branch-is-behind/
+
+
